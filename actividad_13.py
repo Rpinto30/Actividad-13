@@ -1,6 +1,6 @@
 students = {'EST1507325':
                 {'name': 'Rodrigo', 'career': 'Ingenieria En Informatica Y Sistemas',
-                 'subjects': {'Calculo': 10}}}
+                 'subjects': {'Calculo': 10, 'Física': 20}}}
 
 def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA VALIDA
     while True:
@@ -70,6 +70,17 @@ def select_student():
                 print(f"     ⏺ {name}: {note}")
         else: print("    Sin cursos registrados")
 
+def media_note_student():
+    id_select = check_id("CONSULTAR ESTUDIANTE")
+    if id_select in students:  # PARA EVITAR QUE AL VOLVER AL MENÚ PRINCIAPAL SE EJECUTE ESTO
+        try:
+            sum_notes, len_notes = [0,0]
+            for i in students[id_select]['subjects'].values():
+                len_notes+=1
+                sum_notes += i
+            print(f"El promedio del estudiante es: {sum_notes/len_notes:.2f}")
+        except ZeroDivisionError: print("\nEl estudiante seleccionado no posee cursos asignados")
+
 while True:
     print("═"*20+" BIENVENIDO "+"═"*20)
     print("1) Agregar estudiante\n2) Agregar curso con nota\n3) Consultar estudiante\n4) Calcular promedio de estudiante\n5)Verificar si aprueba\n6) Mostrar todos los estudiantes\n7) Salir")
@@ -79,6 +90,7 @@ while True:
             case '1': add_student()
             case '2': add_note()
             case '3': select_student()
+            case '4':media_note_student()
             case '7': #EL PROGRAMA MARCA UN MENSAJE DE DESPEDIDA Y GUARDA LOS DATOS
                 print("\n  ⌂ Hasta pronto!")
                 break
