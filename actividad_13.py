@@ -2,6 +2,14 @@ students = {'EST1507325':
                 {'name': 'Rodrigo', 'career': 'Ingenieria en Informatica y Sistemas',
                  'subjects': {'calculo': 10}}}
 
+def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA VALIDA
+    while True:
+        try:
+            value = int(input(message))
+            break
+        except ValueError: print('-'*50+'\n'+"❌"*5+"   Lo siento valor no valido, intentelo nuevamente   "+"❌"*5)
+    return value
+
 def add_student():
     print("-"*20+" AÑADIR ESTUDIANTE "+"-"*20)
     while True:
@@ -19,9 +27,9 @@ def add_student():
 
     print(f"\n  ✔️ ¡El estudiante {name}({id_add}) ha sido agregado correctamente!")
 
-def add_note():
+def check_id(option: str): #HACE LA VERIFICACIÓN DE ID DEL ESTUDIANTE (PARA NO HACER EL MISMO CODIGO OTRA VEZ EN LA OPCIÓN 2 Y 3)
     while True:
-        print("-" * 20 + " AÑADIR NOTA A ESTUDIANTE " + "-" * 20)
+        print("-" * 20 + f" {option} " + "-" * 20)
         id_select = input("▶ Ingresa el codigo del estudiante: ")
         if id_select in students: break #SALE DIRECTAMENTE EL BUCLE SOLO SI EL ID ESTÁ REGISTRADO
         else:
@@ -36,26 +44,26 @@ def add_note():
                         break
                     case _: print("-"*25+"\nEntrada no valida, intente de nuevo\n"+"-"*25)
         if id_select is None: break #VOLVER AL MENU PRINCIPAL
+    return id_select
 
-    if id_select in students:
-        print(f"Para el estudiante {students[id_select]['name']}: ")
+def add_note():
+    ###
+    id_select = check_id("AÑADIR NOTA A ESTUDIANTE")
+
+    if id_select in students: #PARA EVITAR QUE AL VOLVER AL MENÚ PRINCIAPAL SE EJECUTE ESTO
+        print(f"Para el estudiante {students[str(id_select)]['name']}: ")
         name_subject = input("   ▶ Ingresa el nombre del curso: ")
         while True:
             note = input_integer("   ▶ Ingresa la nota final del curso: ")
-            if 0<= note <= 100: break
+            if 0<= note <= 100: break #SI LA NOTA ESTÁ ENTRE 0 Y 100 EL PROGRAMA CONTINUA, SINO VUELVE A PEDIR LA NOTA
             else: print("-"*25+"\nEntrada no valida, la nota debe estar en el rango entre 0 y 100\n"+"-"*25)
 
-        students[id_select]['subjects'][name_subject.lower()] = note
-        print(f"\n  ✔️ ¡El curso {name_subject}({note} pts) ha sido añadido al estudiante {students[id_select]['name']}({id_select})!")
+        students[str(id_select)]['subjects'][name_subject.lower()] = note #SE GUARDA EN EL DICCIONARIO SUBJECTS COMO CLAVE EL NOMBRE DEL CURSO Y COMO VALOR LA NOTA
+        print(f"\n  ✔️ ¡El curso {name_subject}({note} pts) ha sido añadido al estudiante {students[str(id_select)]['name']}({id_select})!") #SE AGREGA AL DICCIONARIO
         print(students)
 
-def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA VALIDA
-    while True:
-        try:
-            value = int(input(message))
-            break
-        except ValueError: print('-'*50+'\n'+"❌"*5+"   Lo siento valor no valido, intentelo nuevamente   "+"❌"*5)
-    return value
+
+
 
 
 while True:
