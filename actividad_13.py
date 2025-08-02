@@ -1,6 +1,6 @@
 students = {'EST1507325':
-                {'name': 'Rodrigo', 'career': 'Ingenieria en Informatica y Sistemas',
-                 'subjects': {'calculo': 10}}}
+                {'name': 'Rodrigo', 'career': 'Ingenieria En Informatica Y Sistemas',
+                 'subjects': {'Calculo': 10}}}
 
 def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA VALIDA
     while True:
@@ -16,8 +16,8 @@ def add_student():
         id_add = input("▶ Ingresa el codigo del nuevo estudiante: ")
         if id_add not in students: break
         else: print("\nError, codigo ya registrado, porfavor, crea un codigo no existente")
-    name = input("▶ Ingresa el nombre nuevo estudiante: ")
-    career = input("▶ Ingresa el nombre de la carrera del nuevo estudiante: ")
+    name = input("▶ Ingresa el nombre nuevo estudiante: ").capitalize()
+    career = input("▶ Ingresa el nombre de la carrera del nuevo estudiante: ").capitalize()
 
     students[id_add] = {
         'name': name,
@@ -47,12 +47,11 @@ def check_id(option: str): #HACE LA VERIFICACIÓN DE ID DEL ESTUDIANTE (PARA NO 
     return id_select
 
 def add_note():
-    ###
     id_select = check_id("AÑADIR NOTA A ESTUDIANTE")
 
     if id_select in students: #PARA EVITAR QUE AL VOLVER AL MENÚ PRINCIAPAL SE EJECUTE ESTO
         print(f"Para el estudiante {students[str(id_select)]['name']}: ")
-        name_subject = input("   ▶ Ingresa el nombre del curso: ")
+        name_subject = input("   ▶ Ingresa el nombre del curso: ").capitalize()
         while True:
             note = input_integer("   ▶ Ingresa la nota final del curso: ")
             if 0<= note <= 100: break #SI LA NOTA ESTÁ ENTRE 0 Y 100 EL PROGRAMA CONTINUA, SINO VUELVE A PEDIR LA NOTA
@@ -62,9 +61,14 @@ def add_note():
         print(f"\n  ✔️ ¡El curso {name_subject}({note} pts) ha sido añadido al estudiante {students[str(id_select)]['name']}({id_select})!") #SE AGREGA AL DICCIONARIO
         print(students)
 
-
-
-
+def select_student():
+    id_select = check_id("CONSULTAR ESTUDIANTE")
+    if id_select in students:  # PARA EVITAR QUE AL VOLVER AL MENÚ PRINCIAPAL SE EJECUTE ESTO
+        print(f"  Nombre: {students[id_select]['name']}\n  Carrera: {students[id_select]['career']}\n  Cursos: ")
+        if len(students[id_select]['subjects']) > 0: #Si existen cursos
+            for name,note in students[id_select]['subjects'].items():
+                print(f"     ⏺ {name}: {note}")
+        else: print("    Sin cursos registrados")
 
 while True:
     print("═"*20+" BIENVENIDO "+"═"*20)
@@ -74,6 +78,7 @@ while True:
         match op:
             case '1': add_student()
             case '2': add_note()
+            case '3': select_student()
             case '7': #EL PROGRAMA MARCA UN MENSAJE DE DESPEDIDA Y GUARDA LOS DATOS
                 print("\n  ⌂ Hasta pronto!")
                 break
