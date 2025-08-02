@@ -10,37 +10,38 @@ def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA V
 
 def load_data():
     try:
-        with open("data.txt", 'r') as data_load:
-            data = []
-            for num, linea in enumerate(data_load, 0):
-                if linea.strip() != "": data.append(linea.strip())
+        with open("data.txt", 'r') as data_load: #Se abre en modo lectura 'r'
+            data = [] #Una lista a donde van a parar todos los valores del diccionario
+            for linea in data_load:
+                if linea.strip() != "": data.append(linea.strip()) #Si no se detecta un salgo de linea, se añade la linea a la lista de valores
                 else:
-                    id_std = data[0]
-                    students[id_std] = {
+                    id_std = data[0] #Se guarda el carnet (solo para usarlo en los cursos también)
+                    students[id_std] = { #Se guardan todos los datos menos el de materias, por ahora está vacio
                         'name' : data[1],
                         'career': data[2],
                         'subjects': {}
                     }
-                    for subject_line in data[3:]:
-                        parts = subject_line.rsplit("   ", 1)
-                        if len(parts) == 2:
+
+                    for subject_line in data[3:]: #Se detectan las lineas luego de la tercera de la lista creada (data) aquí van a parar siempre todos los cursos
+                        parts = subject_line.rsplit("   ", 1) #Al guardar siempre estan separados por 3 espacio, entonces en una nueva lista se separa el nombre y la nota
+                        if len(parts) == 2: #Si el programa logra cargar la nota y el nombre (len = 2) hace lo siguiente
                             subjet, note = parts
-                            students[id_std]['subjects'][subjet] = int(note)
-                    data = []
+                            students[id_std]['subjects'][subjet] = int(note) #Guarda en el diccionario subjects del estudiante como clave el nombre del curso y de valor la nota
+                    data = [] #Se resetea el data para poder guardar el siguiente estudiante
     except FileNotFoundError:
         with open('data.txt', 'w') as archivo:
-            archivo.write("")  # Crear el archivo vacío
+            archivo.write("")  # Si el archivo no está creado, el programa crea un txt donde se guardará la info
 
-def save_data():
-    with open('data.txt', 'w') as data:
+def save_data(): #Algo rebuscado pero funciona
+    with open('data.txt', 'w') as data: #Se abre en modo escritura 'w'
         for id_std, values in students.items():
             data.write(id_std +'\n')
             data.write(values['name']+"\n")
-            data.write(values['career']+"\n")
+            data.write(values['career']+"\n") #Se guardan todos los valores del diccionario
             for subjet, note in values['subjects'].items():
-                data.write(f"{subjet}   {note}\n")
-            data.write('\n')
-        data.write('.')
+                data.write(f"{subjet}   {note}\n")#Se guardan los cursos y notas separados por 3 espacios (Calculo   100)
+            data.write('\n') #Se coloca un salto de linea adicional para que se detecte cuando es un nuevo estudiante
+        data.write('.') #Se coloca un punto para que lea la ultima linea del txt
 
 
 def add_student():
@@ -167,7 +168,7 @@ while True:
                 print("  ⚙️ Gurdando datos...")
                 save_data()
                 print("  ✔️ Los datos se guardaron correctamente!")
-                print("\n  ⌂ Hasta pronto!")
+                print("\n  👋 ¡Hasta pronto!")
                 break
             case _: print("-"*25+"\nEntrada no valida, intente de nuevo\n"+"-"*25)
     except KeyboardInterrupt: print("\n\n"+ "❌ Error en el programa, usted intentó salir de manera bruzca\n   Redirigiendo al menú principal") #ERROR CUANDO SE FUERZA EL CIERRE DEL PROGRAMA
