@@ -37,6 +37,7 @@ def load_data():
 
                 print(data)
                 data = []
+    print(students)
 
 def save_data():
     with open('data.txt', 'w') as data:
