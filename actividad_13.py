@@ -1,12 +1,4 @@
-students = {'EST1507325':
-                {'name': 'Rodrigo', 'career': 'Ingeniería En Informatica Y Sistemas',
-                 'subjects': {'Cálculo': 10, 'Física': 62}},
-            'EST1000':
-                {'name': 'Pepito', 'career': 'Nutrición',
-                 'subjects': {'Quimica I': 91, 'Magis': 60}}
-            }
-
-
+students = {}
 
 def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA VALIDA
     while True:
@@ -19,9 +11,8 @@ def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA V
 def load_data():
     with open("data.txt", 'r') as data_load:
         data = []
-        for num, linea in enumerate(data_load, 1):
-            if linea.strip() != "":
-                data.append(linea.strip())
+        for num, linea in enumerate(data_load, 0):
+            if linea.strip() != "": data.append(linea.strip())
             else:
                 id_std = data[0]
                 students[id_std] = {
@@ -34,10 +25,7 @@ def load_data():
                     if len(parts) == 2:
                         subjet, note = parts
                         students[id_std]['subjects'][subjet] = int(note)
-
-                print(data)
                 data = []
-    print(students)
 
 def save_data():
     with open('data.txt', 'w') as data:
@@ -48,6 +36,7 @@ def save_data():
             for subjet, note in values['subjects'].items():
                 data.write(f"{subjet}   {note}\n")
             data.write('\n')
+        data.write('.')
 
 
 def add_student():
@@ -92,13 +81,13 @@ def add_note():
 
         if id_select in students: #PARA EVITAR QUE AL VOLVER AL MENÚ PRINCIAPAL SE EJECUTE ESTO
             print(f"Para el estudiante {students[str(id_select)]['name']}: ")
-            name_subject = input("   ▶ Ingresa el nombre del curso: ").capitalize()
+            name_subject = input("   ▶ Ingresa el nombre del curso: ")
             while True:
                 note = input_integer("   ▶ Ingresa la nota final del curso: ")
                 if 0<= note <= 100: break #SI LA NOTA ESTÁ ENTRE 0 Y 100 EL PROGRAMA CONTINUAR SI NO VUELVE A PEDIR LA NOTA
                 else: print("-"*25+"\nEntrada no valida, la nota debe estar en el rango entre 0 y 100\n"+"-"*25)
 
-            students[str(id_select)]['subjects'][name_subject.lower()] = note #SE GUARDA EN EL DICCIONARIO SUBJECTS COMO CLAVE EL NOMBRE DEL CURSO Y COMO VALOR LA NOTA
+            students[str(id_select)]['subjects'][name_subject] = note #SE GUARDA EN EL DICCIONARIO SUBJECTS COMO CLAVE EL NOMBRE DEL CURSO Y COMO VALOR LA NOTA
             print(f"\n  ✔️ ¡El curso {name_subject}({note} pts) ha sido añadido al estudiante {students[str(id_select)]['name']}({id_select})!") #SE AGREGA AL DICCIONARIO
             print(students)
     else: print(" 😲 No hay estudiantes registrados!")
@@ -142,7 +131,7 @@ def show_students():
         for id_std, values in students.items():
             print(f"{id_std:<20}{values['name']:<25}{values['career']:<50}", end="")
             if len(values['subjects']) > 0:  # Si existen cursos
-                for name, note in values['subjects'].items(): print(f"⏺{name}: {note}", end=' ')
+                for name, note in values['subjects'].items(): print(f"⏺{name}: {note}  ", end=' ')
                 print(" ")
             else: print("Sin cursos registrados")
     else: print(" 😲 No hay estudiantes registrados!")
@@ -172,10 +161,10 @@ while True:
             case '7': delete_id()
             case '8': #EL PROGRAMA MARCA UN MENSAJE DE DESPEDIDA Y GUARDA LOS DATOS
                 print("  ⚙️ Gurdando datos...")
-                #load_data()
                 save_data()
+                print("  ✔️ Los datos se guardaron correctamente!")
                 print("\n  ⌂ Hasta pronto!")
                 break
             case _: print("-"*25+"\nEntrada no valida, intente de nuevo\n"+"-"*25)
-    #except KeyboardInterrupt: print("\n\n"+ "❌ Error en el programa, usted intentó salir de manera bruzca\n   Redirigiendo al menú principal") #ERROR CUANDO SE FUERZA EL CIERRE DEL PROGRAMA
+    except KeyboardInterrupt: print("\n\n"+ "❌ Error en el programa, usted intentó salir de manera bruzca\n   Redirigiendo al menú principal") #ERROR CUANDO SE FUERZA EL CIERRE DEL PROGRAMA
     except Exception as e:  print("\n\n"+ f"❌ Error en el programa, hubo un fallo inesperado, {e}\n   Redirigiendo al menú principal") #EVITAR CUALQUIER TIPO DE ERROR NO PREVISTO
