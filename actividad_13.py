@@ -1,6 +1,6 @@
 students = {'EST1507325':
                 {'name': 'Rodrigo', 'career': 'Ingenieria En Informatica Y Sistemas',
-                 'subjects': {'Calculo': 10, 'Física': 20}}}
+                 'subjects': {'Calculo': 10, 'Física': 62}}}
 
 def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA VALIDA
     while True:
@@ -54,7 +54,7 @@ def add_note():
         name_subject = input("   ▶ Ingresa el nombre del curso: ").capitalize()
         while True:
             note = input_integer("   ▶ Ingresa la nota final del curso: ")
-            if 0<= note <= 100: break #SI LA NOTA ESTÁ ENTRE 0 Y 100 EL PROGRAMA CONTINUA, SINO VUELVE A PEDIR LA NOTA
+            if 0<= note <= 100: break #SI LA NOTA ESTÁ ENTRE 0 Y 100 EL PROGRAMA CONTINUAR SI NO VUELVE A PEDIR LA NOTA
             else: print("-"*25+"\nEntrada no valida, la nota debe estar en el rango entre 0 y 100\n"+"-"*25)
 
         students[str(id_select)]['subjects'][name_subject.lower()] = note #SE GUARDA EN EL DICCIONARIO SUBJECTS COMO CLAVE EL NOMBRE DEL CURSO Y COMO VALOR LA NOTA
@@ -74,23 +74,31 @@ def media_note_student():
     id_select = check_id("CONSULTAR ESTUDIANTE")
     if id_select in students:  # PARA EVITAR QUE AL VOLVER AL MENÚ PRINCIAPAL SE EJECUTE ESTO
         try:
-            sum_notes, len_notes = [0,0]
-            for i in students[id_select]['subjects'].values():
-                len_notes+=1
-                sum_notes += i
-            print(f"El promedio del estudiante es: {sum_notes/len_notes:.2f}")
+            sum_notes = 0
+            for i in students[id_select]['subjects'].values(): sum_notes += i
+            print(f"El promedio del estudiante es: {sum_notes/len(students[id_select]['subjects']):.2f}")
         except ZeroDivisionError: print("\nEl estudiante seleccionado no posee cursos asignados")
+
+def approve_subject():
+    id_select = check_id("CONSULTAR ESTUDIANTE")
+    if id_select in students:
+        print(f"{'Curso':<25}{'Nota':<15}{'Estado'}")
+        for name,note in students[id_select]['subjects'].items():
+            if note >= 61: state = 'Aprovado'
+            else: state = 'Reprobado'
+            print(f"{name:<25}{note:<15}{state}")
 
 while True:
     print("═"*20+" BIENVENIDO "+"═"*20)
-    print("1) Agregar estudiante\n2) Agregar curso con nota\n3) Consultar estudiante\n4) Calcular promedio de estudiante\n5)Verificar si aprueba\n6) Mostrar todos los estudiantes\n7) Salir")
+    print("1) Agregar estudiante\n2) Agregar curso con nota\n3) Consultar estudiante\n4) Calcular promedio de estudiante\n5) Verificar si aprueba\n6) Mostrar todos los estudiantes\n7) Salir")
     try:
         op = input("▶ Ingresa una de las opciones: ")
         match op:
             case '1': add_student()
             case '2': add_note()
             case '3': select_student()
-            case '4':media_note_student()
+            case '4': media_note_student()
+            case '5':approve_subject()
             case '7': #EL PROGRAMA MARCA UN MENSAJE DE DESPEDIDA Y GUARDA LOS DATOS
                 print("\n  ⌂ Hasta pronto!")
                 break
