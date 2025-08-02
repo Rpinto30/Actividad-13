@@ -9,23 +9,27 @@ def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA V
     return value
 
 def load_data():
-    with open("data.txt", 'r') as data_load:
-        data = []
-        for num, linea in enumerate(data_load, 0):
-            if linea.strip() != "": data.append(linea.strip())
-            else:
-                id_std = data[0]
-                students[id_std] = {
-                    'name' : data[1],
-                    'career': data[2],
-                    'subjects': {}
-                }
-                for subject_line in data[3:]:
-                    parts = subject_line.rsplit("   ", 1)
-                    if len(parts) == 2:
-                        subjet, note = parts
-                        students[id_std]['subjects'][subjet] = int(note)
-                data = []
+    try:
+        with open("data.txt", 'r') as data_load:
+            data = []
+            for num, linea in enumerate(data_load, 0):
+                if linea.strip() != "": data.append(linea.strip())
+                else:
+                    id_std = data[0]
+                    students[id_std] = {
+                        'name' : data[1],
+                        'career': data[2],
+                        'subjects': {}
+                    }
+                    for subject_line in data[3:]:
+                        parts = subject_line.rsplit("   ", 1)
+                        if len(parts) == 2:
+                            subjet, note = parts
+                            students[id_std]['subjects'][subjet] = int(note)
+                    data = []
+    except FileNotFoundError:
+        with open('data.txt', 'w') as archivo:
+            archivo.write("")  # Crear el archivo vacío
 
 def save_data():
     with open('data.txt', 'w') as data:
