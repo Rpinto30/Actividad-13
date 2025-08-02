@@ -1,6 +1,12 @@
 students = {'EST1507325':
-                {'name': 'Rodrigo', 'career': 'Ingenieria En Informatica Y Sistemas',
-                 'subjects': {'Calculo': 10, 'Física': 62}}}
+                {'name': 'Rodrigo', 'career': 'Ingeniería En Informatica Y Sistemas',
+                 'subjects': {'Cálculo': 10, 'Física': 62}},
+            'EST1000':
+                {'name': 'Pepito', 'career': 'Nutrición',
+                 'subjects': {'Quimica I': 91, 'Magis': 60}}
+            }
+
+
 
 def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA VALIDA
     while True:
@@ -9,6 +15,39 @@ def input_integer(message): #INGRESAR UN ENTERO Y VERIFICAR QUE SU ENTRADA SEA V
             break
         except ValueError: print('-'*50+'\n'+"❌"*5+"   Lo siento valor no valido, intentelo nuevamente   "+"❌"*5)
     return value
+
+def load_data():
+    with open("data.txt", 'r') as data_load:
+        data = []
+        for num, linea in enumerate(data_load, 1):
+            if linea.strip() != "":
+                data.append(linea.strip())
+            else:
+                id_std = data[0]
+                students[id_std] = {
+                    'name' : data[1],
+                    'career': data[2],
+                    'subjects': {}
+                }
+                for subject_line in data[3:]:
+                    parts = subject_line.rsplit("   ", 1)
+                    if len(parts) == 2:
+                        subjet, note = parts
+                        students[id_std]['subjects'][subjet] = int(note)
+
+                print(data)
+                data = []
+
+def save_data():
+    with open('data.txt', 'w') as data:
+        for id_std, values in students.items():
+            data.write(id_std +'\n')
+            data.write(values['name']+"\n")
+            data.write(values['career']+"\n")
+            for subjet, note in values['subjects'].items():
+                data.write(f"{subjet}   {note}\n")
+            data.write('\n')
+
 
 def add_student():
     print("-"*20+" AÑADIR ESTUDIANTE "+"-"*20)
@@ -116,6 +155,7 @@ def delete_id(): #UNA ADICIONAL SOLO PARA DAR LA OPCION
             print("️  🗑️ Estudiante eliminado!")
     else: print(" 😲 No hay estudiantes registrados!")
 
+load_data()
 while True:
     print("═"*20+" BIENVENIDO "+"═"*20)
     print("1) Agregar estudiante\n2) Agregar curso con nota\n3) Consultar estudiante\n4) Calcular promedio de estudiante\n5) Verificar si aprueba\n6) Mostrar todos los estudiantes\n7) Borrar un estudiante\n8) Salir")
@@ -130,6 +170,9 @@ while True:
             case '6': show_students()
             case '7': delete_id()
             case '8': #EL PROGRAMA MARCA UN MENSAJE DE DESPEDIDA Y GUARDA LOS DATOS
+                print("  ⚙️ Gurdando datos...")
+                #load_data()
+                save_data()
                 print("\n  ⌂ Hasta pronto!")
                 break
             case _: print("-"*25+"\nEntrada no valida, intente de nuevo\n"+"-"*25)
