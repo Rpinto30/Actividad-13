@@ -88,6 +88,17 @@ def approve_subject():
             else: state = 'Reprobado'
             print(f"{name:<25}{note:<15}{state}")
 
+def show_students():
+    print(f"\n{'Carnet':<20}{'Nombre':<25}{'Carrera':<50}{'Notas'}")
+    for id_std, values in students.items():
+        print(f"{id_std:<20}{values['name']:<25}{values['career']:<50}", end="")
+        if len(values['subjects']) > 0:  # Si existen cursos
+            for name, note in values['subjects'].items(): print(f"⏺{name}: {note}", end=' ')
+            print(" ")
+        else: print("Sin cursos registrados")
+
+def delete_id() #UNA ADICIONAL SOLO PARA DAR LA OPCION
+
 while True:
     print("═"*20+" BIENVENIDO "+"═"*20)
     print("1) Agregar estudiante\n2) Agregar curso con nota\n3) Consultar estudiante\n4) Calcular promedio de estudiante\n5) Verificar si aprueba\n6) Mostrar todos los estudiantes\n7) Salir")
@@ -98,7 +109,8 @@ while True:
             case '2': add_note()
             case '3': select_student()
             case '4': media_note_student()
-            case '5':approve_subject()
+            case '5': approve_subject()
+            case '6': show_students()
             case '7': #EL PROGRAMA MARCA UN MENSAJE DE DESPEDIDA Y GUARDA LOS DATOS
                 print("\n  ⌂ Hasta pronto!")
                 break
